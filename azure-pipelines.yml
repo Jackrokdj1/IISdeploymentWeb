@@ -4,16 +4,20 @@ pool:
   name: Azure Pipelines
 
 steps:
-- task: DotNetCoreCLI@2
-  displayName: Restore
+- task: UseDotNet@2
+  displayName: 'Install .NET core sdk'
   inputs:
-    command: restore
-    projects: '$(Parameters.RestoreBuildProjects)'
-
+    packageType: 'sdk'
+    version: '2.2.x'
+- task: UseDotNet@2
+  displayName: 'Set .NET Core version to use'
+  inputs:
+    packageType: 'sdk'
+    version: '2.2.x'
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
-    projects: '$(Parameters.RestoreBuildProjects)'
+    projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
