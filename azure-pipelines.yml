@@ -1,0 +1,49 @@
+pool:
+  name: Azure Pipelines
+  
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '$(Parameters.RestoreBuildProjects)'
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: '$(Parameters.RestoreBuildProjects)'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Test
+  inputs:
+    command: test
+    projects: '$(Parameters.TestProjects)'
+    arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="$(Agent.TempDirectory)/TestResults/"'
+
+- script: 'dotnet tool install -g dotnet-reportgenerator-globaltool'
+  displayName: 'Install Report Generator Tool'
+
+- script: 'reportgenerator "-reporttypes:Cobertura" "-reports:$(Agent.TempDirectory)/TestResults/coverage.cobertura.xml" "-targetdir:$(Build.SourcesDirectory)/coverlet/reports"'
+  displayName: 'Merge code-coverage files'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Generate code-coverage HTML report'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml'
+    failIfCoverageEmpty: true
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: True
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
