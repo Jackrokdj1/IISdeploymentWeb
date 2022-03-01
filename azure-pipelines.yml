@@ -28,8 +28,8 @@ steps:
     SonarQube: 'Sonar30'
     scannerMode: 'CLI'
     configMode: 'manual'
-    cliProjectKey: 'DemDevsecops'
-    cliProjectName: 'DemDevsecops'
+    cliProjectKey: 'IISHostedWebApp'
+    cliProjectName: 'IISHostedWebApp'
     cliSources: '.'
 - task: DotNetCoreCLI@2
   displayName: Build
