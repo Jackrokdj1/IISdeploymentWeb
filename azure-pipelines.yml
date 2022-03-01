@@ -8,12 +8,35 @@ steps:
     command: restore
     projects: '$(RestoreBuildProjects)'
 
+- task: dependency-check-build-task@6
+  inputs:
+    projectName: 'DemdevsecopsOWASP'
+    scanPath: '**/*'
+    format: 'ALL'
+    reportFilename: 'owaspinforme'
+    warnOnCVSSViolation: true
+    enableExperimental: true
+    enableRetired: true
+    enableVerbose: true
+- task: WhiteSource@21
+  inputs:
+    cwd: '$(System.DefaultWorkingDirectory)'
+    projectName: 'Demdevsecops-WhiteDemo'
+
+- task: SonarQubePrepare@5
+  inputs:
+    SonarQube: 'Sonar30'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'DemDevsecops'
+    cliProjectName: 'DemDevsecops'
+    cliSources: '.'
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
     projects: '$(RestoreBuildProjects)'
     arguments: '--configuration $(BuildConfiguration)'
-
+- task: SonarQubeAnalyze@5
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
@@ -41,7 +64,9 @@ steps:
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
     zipAfterPublish: True
-
+- task: SonarQubePublish@5
+  inputs:
+    pollingTimeoutSec: '300'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
