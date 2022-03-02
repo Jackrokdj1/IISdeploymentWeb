@@ -18,6 +18,7 @@ steps:
     command: restore
     projects: '$(RestoreBuildProjects)'
 
+# Agrega esto para analizar tus dependencias en seguridad
 - task: dependency-check-build-task@6
   inputs:
     projectName: 'DemdevsecopsOWASP'
