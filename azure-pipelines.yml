@@ -4,7 +4,7 @@
 trigger:
   branches:
     include:
-    - none
+    - master
 
 # haz esto para usar el agente hospedado por Microsoft del grupo de azure pipelines. Este es el valor por defecto si no se especifica un pool o vmImage.
 pool:
