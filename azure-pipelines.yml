@@ -36,7 +36,7 @@ steps:
     cwd: '$(System.DefaultWorkingDirectory)'
     projectName: 'Demdevsecops-WhiteDemo'
 
-# Haz esto para 
+# Haz esto para preparar la conexión de analisis de codigo estatico mediante sonarqube
 - task: SonarQubePrepare@5
   inputs:
     SonarQube: 'Sonar30'
@@ -45,6 +45,8 @@ steps:
     cliProjectKey: 'IISHostedWebApp'
     cliProjectName: 'IISHostedWebApp'
     cliSources: '.'
+
+# Con este task podra contruir su aplicación
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
@@ -52,6 +54,8 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
 
 # hacer esto después de otras tareas como la construcción
+
+
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
