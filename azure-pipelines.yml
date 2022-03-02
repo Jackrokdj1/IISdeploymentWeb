@@ -1,6 +1,12 @@
+trigger:
+  branches:
+    include:
+    - none
+#
 pool:
   name: Azure Pipelines
-  
+
+# haz esto antes de tus tareas de construcción  
 steps:
 - task: DotNetCoreCLI@2
   displayName: Restore
@@ -36,13 +42,16 @@ steps:
   inputs:
     projects: '$(RestoreBuildProjects)'
     arguments: '--configuration $(BuildConfiguration)'
-- task: SonarQubeAnalyze@5
+
+# hacer esto después de otras tareas como la construcción
+
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
     command: test
     projects: '$(TestProjects)'
     arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="$(Agent.TempDirectory)/TestResults/"'
+- task: SonarQubeAnalyze@5   
 
 - script: 'dotnet tool install -g dotnet-reportgenerator-globaltool'
   displayName: 'Install Report Generator Tool'
@@ -67,6 +76,7 @@ steps:
 - task: SonarQubePublish@5
   inputs:
     pollingTimeoutSec: '300'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
