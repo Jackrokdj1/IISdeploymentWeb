@@ -29,11 +29,14 @@ steps:
     enableExperimental: true
     enableRetired: true
     enableVerbose: true
+
+# Agrega esto para generar un Analisis de seguridad profundo en tus dependencias
 - task: WhiteSource@21
   inputs:
     cwd: '$(System.DefaultWorkingDirectory)'
     projectName: 'Demdevsecops-WhiteDemo'
 
+# Haz esto para 
 - task: SonarQubePrepare@5
   inputs:
     SonarQube: 'Sonar30'
