@@ -53,9 +53,9 @@ steps:
     projects: '$(RestoreBuildProjects)'
     arguments: '--configuration $(BuildConfiguration)'
 
-# hacer esto después de otras tareas como la construcción
+# Hacer esto después de otras tareas como la construcción
 
-
+# 
 - task: DotNetCoreCLI@2
   displayName: Unit Test
   inputs:
