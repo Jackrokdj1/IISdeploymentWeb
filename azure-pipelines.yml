@@ -55,21 +55,26 @@ steps:
 
 # Hacer esto después de otras tareas como la construcción
 
-# 
+# Hacer esto para crear pruebas unitarias
 - task: DotNetCoreCLI@2
   displayName: Unit Test
   inputs:
     command: test
     projects: '$(TestProjects)'
     arguments: '/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="$(Agent.TempDirectory)/TestResults/"'
+
+#Generación de analisis sonarqube    
 - task: SonarQubeAnalyze@5   
 
+#Instalación generación de reportes
 - script: 'dotnet tool install -g dotnet-reportgenerator-globaltool'
   displayName: 'Install Report Generator Tool'
 
+#Construcción generación de reporte pruebas unitarias
 - script: 'reportgenerator "-reporttypes:Cobertura" "-reports:$(Agent.TempDirectory)/TestResults/coverage.cobertura.xml" "-targetdir:$(Build.SourcesDirectory)/coverlet/reports"'
   displayName: 'Merge code-coverage files'
 
+#Públicación de resultados pruebas unitarias
 - task: PublishCodeCoverageResults@1
   displayName: 'Generate code-coverage HTML report'
   inputs:
@@ -77,7 +82,8 @@ steps:
     summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml'
     failIfCoverageEmpty: true
 
-# Haga esto después de que sus pruebas se hayan ejecutado
+#Haga esto después de que sus pruebas se hayan ejecutado y publicado
+#Construcción de resultados para publicación en .zip
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
@@ -85,6 +91,8 @@ steps:
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
     zipAfterPublish: True
+
+#Haz esto para publica los resultados del analisis de codigo estatico en sonarqube
 - task: SonarQubePublish@5
   inputs:
     pollingTimeoutSec: '300'
