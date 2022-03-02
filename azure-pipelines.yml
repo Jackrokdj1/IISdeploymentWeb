@@ -1,9 +1,10 @@
-# haz esto para generar 
+# haz esto para generar disparadores automaticos cuando se generen cambios en la rama
 trigger:
   branches:
     include:
     - none
-#
+
+# haz esto para usar el agente hospedado por Microsoft del grupo de azure pipelines. Este es el valor por defecto si no se especifica un pool o vmImage.
 pool:
   name: Azure Pipelines
 
@@ -65,7 +66,7 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml'
     failIfCoverageEmpty: true
-    
+
 # Haga esto después de que sus pruebas se hayan ejecutado
 - task: DotNetCoreCLI@2
   displayName: Publish
