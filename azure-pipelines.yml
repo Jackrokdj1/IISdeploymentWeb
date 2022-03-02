@@ -1,3 +1,4 @@
+# haz esto para generar 
 trigger:
   branches:
     include:
@@ -44,7 +45,6 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
 
 # hacer esto después de otras tareas como la construcción
-
 - task: DotNetCoreCLI@2
   displayName: Test
   inputs:
@@ -65,7 +65,8 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml'
     failIfCoverageEmpty: true
-
+    
+# Haga esto después de que sus pruebas se hayan ejecutado
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
