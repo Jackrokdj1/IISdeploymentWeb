@@ -1,6 +1,6 @@
 # Este pipeline es una plantilla inicial para integrar apps en .NET Core
 
-# haz esto para generar disparadores automaticos cuando se generen cambios en la rama
+# haz esto para generar disparadores automaticos, cuando se generen cambios en la rama
 trigger:
   branches:
     include:
