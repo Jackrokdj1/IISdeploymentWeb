@@ -97,6 +97,7 @@ steps:
   inputs:
     pollingTimeoutSec: '300'
 
+#Publica los resultados construidos del proyecto
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact'
   inputs:
